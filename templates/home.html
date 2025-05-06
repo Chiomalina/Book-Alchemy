@@ -1,38 +1,34 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Library Home</title>
-</head>
-<body>
-  <h1>My Library</h1>
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+{% block title %}Home – My Library{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h2">All Books</h1>
+    <div>
+      Sort by:
+      <a href="{{ url_for('home', sort='title', q=q) }}" class="btn btn-sm btn-outline-primary {% if current_sort=='title' %}active{% endif %}">Title</a>
+      <a href="{{ url_for('home', sort='author', q=q) }}" class="btn btn-sm btn-outline-primary {% if current_sort=='author' %}active{% endif %}">Author</a>
+    </div>
+  </div>
 
-  <p>
-    Sort by:
-    <a href="{{ url_for('home', sort='title') }}"
-       {% if current_sort=='title' %}style="font-weight:bold"{% endif %}>
-      Title
-    </a> |
-    <a href="{{ url_for('home', sort='author') }}"
-       {% if current_sort=='author' %}style="font-weight:bold"{% endif %}>
-      Author
-    </a>
-  </p>
-
-  <ul>
-  {% for book in books %}
-    <li>
-      <!-- if you want to show a cover, call an external API here via JS or generate URL server-side -->
-      <strong>{{ book.title }}</strong> by {{ book.author.name }}
-    </li>
+  {% if not books %}
+    <p class="text-muted">{% if q %}No results for “{{ q }}”.{% else %}Your library is empty.{% endif %}</p>
   {% else %}
-    <li><em>No books yet</em></li>
-  {% endfor %}
-  </ul>
-
-  <p>
-    <a href="{{ url_for('add_author') }}">Add Author</a> |
-    <a href="{{ url_for('add_book') }}">Add Book</a>
-  </p>
-</body>
-</html>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for book in books %}
+        <div class="col">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ book.title }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">by {{ book.author.name }}</h6>
+              <p class="card-text">ISBN: {{ book.isbn }}<br>Published: {{ book.publication_year or 'N/A' }}</p>
+              <form method="post" action="{{ url_for('delete_book', book_id=book.id) }}" onsubmit="return confirm('Delete this book?');">
+                <button class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
