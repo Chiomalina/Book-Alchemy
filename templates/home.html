@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Library Home</title>
+</head>
+<body>
+  <h1>My Library</h1>
+
+  <p>
+    Sort by:
+    <a href="{{ url_for('home', sort='title') }}"
+       {% if current_sort=='title' %}style="font-weight:bold"{% endif %}>
+      Title
+    </a> |
+    <a href="{{ url_for('home', sort='author') }}"
+       {% if current_sort=='author' %}style="font-weight:bold"{% endif %}>
+      Author
+    </a>
+  </p>
+
+  <ul>
+  {% for book in books %}
+    <li>
+      <!-- if you want to show a cover, call an external API here via JS or generate URL server-side -->
+      <strong>{{ book.title }}</strong> by {{ book.author.name }}
+    </li>
+  {% else %}
+    <li><em>No books yet</em></li>
+  {% endfor %}
+  </ul>
+
+  <p>
+    <a href="{{ url_for('add_author') }}">Add Author</a> |
+    <a href="{{ url_for('add_book') }}">Add Book</a>
+  </p>
+</body>
+</html>

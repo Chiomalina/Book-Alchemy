@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Add Book</title>
+</head>
+<body>
+  <h1>Add Book</h1>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul>
+      {% for category, msg in messages %}
+        <li class="{{ category }}">{{ msg }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post">
+    <label>ISBN:
+      <input type="text" name="isbn" maxlength="13" required>
+    </label><br>
+    <label>Title:
+      <input type="text" name="title" required>
+    </label><br>
+    <label>Publication Year:
+      <input type="number" name="publication_year" min="0" max="9999">
+    </label><br>
+    <label>Author:
+      <select name="author_id" required>
+        <option value="" disabled selected>-- select author --</option>
+        {% for author in authors %}
+          <option value="{{ author.id }}">{{ author.name }}</option>
+        {% endfor %}
+      </select>
+    </label><br>
+    <button type="submit">Add Book</button>
+  </form>
+
+  <p><a href="{{ url_for('home') }}">← Home</a></p>
+</body>
+</html>
